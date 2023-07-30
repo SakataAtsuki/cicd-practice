@@ -22,13 +22,12 @@ jobs:
       - run:
           name: Authenticate with GCP
           command: |
-            echo "$GCLOUD_SERVICE_KEY" | base64 --decode --ignore-garbage > gcloud-service-key.json
-            gcloud auth activate-service-account --key-file=gcloud-service-key.json
-            gcloud --quiet config set project "${GOOGLE_PROJECT_ID}"
-            gcloud auth list
+          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
       - run:
           name: Build and push Docker image
           command: |
+            gcloud auth list
             docker build -t ${GOOGLE_ARTIFACT_REGISTRY}/python-image:${CIRCLE_SHA1} .
             gcloud auth configure-docker --quiet
             docker push ${GOOGLE_ARTIFACT_REGISTRY}/python-image:${CIRCLE_SHA1}
