@@ -1,9 +1,16 @@
 version: 2.1
-jobs:
-  deploy:
+
+executors:
+  docker-executor:
     docker:
       - image: circleci/python:3.7
+
+jobs:
+  build-and-push:
+    executor: docker-executor
     steps:
+      - setup_remote_docker
+      - checkout
       - run:
           name: Install Google Cloud SDK
           command: |
@@ -20,6 +27,6 @@ jobs:
 
 workflows:
   version: 2
-  deploy_workflow:
+  build-deploy:
     jobs:
-      - deploy
+      - build-and-push
