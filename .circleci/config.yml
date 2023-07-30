@@ -27,9 +27,8 @@ jobs:
       - run:
           name: Build and push Docker image
           command: |
-            gcloud auth list
             docker build -t ${GOOGLE_ARTIFACT_REGISTRY}/python-image:${CIRCLE_SHA1} .
-            gcloud auth configure-docker --quiet
+            gcloud auth configure-docker asia-docker.pkg.dev
             docker push ${GOOGLE_ARTIFACT_REGISTRY}/python-image:${CIRCLE_SHA1}
 
 workflows:
