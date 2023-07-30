@@ -1,35 +1,9 @@
 version: 2.1
-
-executors:
-  docker-executor:
+jobs:
+  deploy:
     docker:
       - image: circleci/python:3.7
-
-jobs:
-  build_and_push:
-    executor: docker-executor
     steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Authenticate with GCP
-          command: echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
-      # - run:
-      #     name: Install and configure Google Cloud SDK
-      #     command: |
-      #       sudo apt-get install -y google-cloud-sdk
-      #       gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-      #       gcloud config set project [YOUR_PROJECT_ID]
-      #       gcloud components install docker-credential-gcr
-      #       gcloud auth configure-docker [YOUR_REGION]-docker.pkg.dev --quiet
-      # - run:
-      #     name: Build and push Docker image
-      #     command: |
-      #       docker build -t [YOUR_REGION]-docker.pkg.dev/[YOUR_PROJECT_ID]/[YOUR_REPOSITORY_NAME]/[YOUR_IMAGE_NAME]:[YOUR_IMAGE_TAG] .
-      #       docker push [YOUR_REGION]-docker.pkg.dev/[YOUR_PROJECT_ID]/[YOUR_REPOSITORY_NAME]/[YOUR_IMAGE_NAME]:[YOUR_IMAGE_TAG]
-
-workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - build_and_push
+      - run: |
+          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
