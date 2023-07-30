@@ -14,4 +14,8 @@ resource "google_compute_instance" "default" {
     network = "default"
     access_config {}
   }
+
+  metadata = {
+    user-data = file("./startup/cloud-init.yaml"),
+  }
 }
