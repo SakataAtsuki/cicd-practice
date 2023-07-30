@@ -14,7 +14,9 @@ jobs:
             sudo apt-get update && sudo apt-get install -y google-cloud-sdk
       - run:
           name: Authenticate with GCP
-          command: echo $GCLOUD_SERVICE_KEY | base64 -w 0 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
 
 workflows:
   version: 2
