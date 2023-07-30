@@ -20,15 +20,14 @@ jobs:
             curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
             sudo apt-get update && sudo apt-get install -y google-cloud-sdk
       - run:
-          name: Authenticate with GCP
+          name: Authenticate with GCP # ref. https://circleci.com/docs/authorize-google-cloud-sdk/#authorize
           command: |
             echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
       - run:
           name: Build and push Docker image
           command: |
-            gcloud auth configure-docker --quiet
+            gcloud auth configure-docker asia-east1-docker.pkg.dev
             docker build -t ${GOOGLE_ARTIFACT_REGISTRY}/python-image:${CIRCLE_SHA1} .
             docker push ${GOOGLE_ARTIFACT_REGISTRY}/python-image:${CIRCLE_SHA1}
 
