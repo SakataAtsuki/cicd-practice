@@ -14,16 +14,22 @@ jobs:
           docker_layer_caching: true
       - checkout
       - run:
+          name: Install Google Cloud SDK
+          command: |
+            sudo apt-get install -y google-cloud-sdk
+            echo 'export PATH=$PATH:/usr/lib/google-cloud-sdk/bin' >> $BASH_ENV
+       - run:
           name: Authenticate with GCP
           command: |
-            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-      - run:
+            echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > gcloud-service-key.json
+            gcloud auth activate-service-account --key-file gcloud-service-key.json
+       - run:
           name: Build and push Docker image
           command: |
             gcloud components install docker-credential-gcr
-            gcloud auth configure-docker
-            docker build -t gcr.io/${GOOGLE_PROJECT_ID}/my-image:${CIRCLE_SHA1} .
-            docker push gcr.io/${GOOGLE_PROJECT_ID}/my-image:${CIRCLE_SHA1}
+            docker-credential-gcr configure-docker
+            docker build -t gcr.io/your-gcp-project-id/your-image-name:${CIRCLE_SHA1} .
+            docker push gcr.io/your-gcp-project-id/your-image-name:${CIRCLE_SHA1}
 
 workflows:
   version: 2
