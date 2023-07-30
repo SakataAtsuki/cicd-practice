@@ -7,3 +7,9 @@ jobs:
       - run: |
           echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+
+workflows:
+  version: 2
+  deploy_workflow:
+    jobs:
+      - deploy
