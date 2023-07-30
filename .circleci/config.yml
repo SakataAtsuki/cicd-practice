@@ -9,27 +9,10 @@ jobs:
   build-and-push:
     executor: docker-executor
     steps:
-      - setup_remote_docker:
-          version: 20.10.7
-          docker_layer_caching: true
       - checkout
-      - run:
-          name: Install Google Cloud SDK
-          command: |
-            sudo apt-get install -y google-cloud-sdk
-            echo 'export PATH=$PATH:/usr/lib/google-cloud-sdk/bin' >> $BASH_ENV
-      - run:
-          name: Authenticate with GCP
-          command: |
-            echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > gcloud-service-key.json
-            gcloud auth activate-service-account --key-file gcloud-service-key.json
-      - run:
-          name: Build and push Docker image
-          command: |
-            gcloud components install docker-credential-gcr
-            docker-credential-gcr configure-docker
-            docker build -t gcr.io/your-gcp-project-id/your-image-name:${CIRCLE_SHA1} .
-            docker push gcr.io/your-gcp-project-id/your-image-name:${CIRCLE_SHA1}
+      - gcp-cloud-run/init:
+          gcloud-service-key: GCLOUD_SERVICE_KEY
+          google-project-id: GOOGLE_PROJECT_ID
 
 workflows:
   version: 2
