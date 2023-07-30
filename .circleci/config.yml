@@ -24,6 +24,6 @@ jobs:
 
 workflows:
   version: 2
-  deploy_workflow:
+  build-deploy:
     jobs:
-      - deploy
+      - build_and_push
