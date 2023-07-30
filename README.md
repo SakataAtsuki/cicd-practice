@@ -1,2 +1,2 @@
 # cicd-practice
-- Docker Image を保存する Artifact Registory を作成
+- Docker Image を保存する Artifact Registry を作成
