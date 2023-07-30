@@ -1,2 +1,2 @@
 # cicd-practice
-- Docker Image を保存する Artifact Registry を作成
+- CircleCI を用いて、Docker Image を作成して Artifact Registry に保存する
