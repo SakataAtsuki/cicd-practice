@@ -1,11 +1,16 @@
 # ベースイメージとして公式のPythonイメージを使用
 FROM python:3.9-slim
 
+RUN apt-get update && apt-get install -y \
+ google-cloud-sdk \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
 # 作業ディレクトリを設定
 WORKDIR /app
 
-# Pythonプログラムをコピー
-COPY . .
+# pipのアップグレード
+RUN pip install --upgrade pip
 
-# Pythonプログラムを実行
-CMD ["python3", "main.py"]
+# アプリケーションのソースコードをコンテナにコピー
+COPY . .
